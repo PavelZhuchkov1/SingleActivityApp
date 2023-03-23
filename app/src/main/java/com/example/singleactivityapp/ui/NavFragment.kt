@@ -1,30 +1,29 @@
-package com.example.singleactivityapp
+package com.example.singleactivityapp.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.singleactivityapp.R
 import com.example.singleactivityapp.databinding.FragmentNavBinding
 
-class NavFragment : Fragment() {
+class NavFragment : ViewBindingFragment() {
 
-    private var _binding: FragmentNavBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentNavBinding::inflate)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentNavBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parentFragmentManager.commit {
+            setPrimaryNavigationFragment(this@NavFragment)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.title = NavFragment::class.simpleName
+
         childFragmentManager.commit {
+            setReorderingAllowed(true)
             add(R.id.fragment_container, TextFragment.newInstance(getString(R.string.showcase)))
         }
         binding.bottomNavView.selectedItemId = R.id.showcase
@@ -39,14 +38,10 @@ class NavFragment : Fragment() {
 
             childFragmentManager.commit {
                 replace(R.id.fragment_container, selectedFragment)
+                addToBackStack(null)
             }
 
             true
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

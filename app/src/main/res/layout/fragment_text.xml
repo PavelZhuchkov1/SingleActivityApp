@@ -12,4 +12,11 @@
         android:layout_gravity="center"
         tools:text="Some text" />
 
+    <TextView
+        android:id="@+id/back_stack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        tools:text="5"/>
+
 </FrameLayout>

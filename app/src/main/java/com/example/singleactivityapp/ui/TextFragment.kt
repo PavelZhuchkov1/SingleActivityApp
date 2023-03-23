@@ -1,18 +1,16 @@
-package com.example.singleactivityapp
+package com.example.singleactivityapp.ui
 
+import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.example.singleactivityapp.R
 import com.example.singleactivityapp.databinding.FragmentTextBinding
 
-class TextFragment : Fragment() {
+class TextFragment : ViewBindingFragment() {
 
-    private var _binding: FragmentTextBinding? = null
-    private val binding get() = _binding!!
+    private val binding by viewBinding(FragmentTextBinding::inflate)
 
     companion object {
         private const val ARG_TEXT_KEY = "text"
@@ -25,28 +23,16 @@ class TextFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentTextBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myText.text = arguments?.getString(ARG_TEXT_KEY)
+        binding.backStack.text = parentFragmentManager.backStackEntryCount.toString()
         binding.myText.setOnClickListener {
-            requireActivity().supportFragmentManager.commit {
+            parentFragmentManager.commit {
+                setReorderingAllowed(true)
                 add(R.id.fragment_container, TextFragment.newInstance("book screen"))
                 addToBackStack(null)
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
